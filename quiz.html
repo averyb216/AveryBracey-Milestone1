@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>HTTP Self‑Assessment Quiz</title>
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body class="page">
+  <nav class="main-nav">
+    <a href="index.html" class="logo" aria-label="Home">Avery Bracey - HTTP </a>
+    <ul>
+      <li><a href="http-history.html">History</a></li>
+      <li><a href="http-today-and-future.html">Today &amp; Future</a></li>
+      <li><a href="key-concepts.html">Key Concepts</a></li>
+      <li><a href="references.html">References</a></li>
+      <li><a href="about.html">About</a></li>
+      <li><a href="quiz.html">Quiz</a></li>
+    </ul>
+  </nav>
+
+
+  <main class="container">
+    <section class="panel">
+      <h1>HTTP Quiz</h1>
+
+      <!-- Direcetions for the user-->
+
+      <p class="muted">When you submit, you’ll see per-question feedback, your total score, and if you passed or failed.</p>
+      
+      <form id="quiz" class="quiz" novalidate>
+
+        <!-- The five questions for the quiz-->
+
+        <fieldset>
+          <legend>Q1 — Fill in the blank (2 pts)</legend>
+          <label for="q1">HTTP is a/an <em>________</em>-layer protocol that uses a request–response model.</label>
+          <input type="text" id="q1" name="q1" placeholder="Your answer (single word)" autocomplete="off" />
+          <div id="q1-feedback" class="muted"></div>
+        </fieldset>
+
+        <fieldset>
+          <legend>Q2 — Multiple choice (2 pts)</legend>
+          <p>Which HTTP method retrieves a resource without modifying it?</p>
+          <label><input type="radio" name="q2" value="GET">GET</label>
+          <label><input type="radio" name="q2" value="POST">POST</label>
+          <label><input type="radio" name="q2" value="PUT">PUT</label>
+          <label><input type="radio" name="q2" value="DELETE">DELETE</label>
+          <div id="q2-feedback" class="muted"></div>
+        </fieldset>
+
+        <fieldset>
+          <legend>Q3 — Multiple choice (2 pts)</legend>
+          <p>Which HTTP version introduced multiplexing?</p>
+          <label><input type="radio" name="q3" value="1.1">HTTP/1.1</label>
+          <label><input type="radio" name="q3" value="2">HTTP/2</label>
+          <label><input type="radio" name="q3" value="3">HTTP/3</label>
+          <label><input type="radio" name="q3" value="0.9">HTTP/0.9</label>
+          <div id="q3-feedback" class="muted"></div>
+        </fieldset>
+
+        <fieldset>
+          <legend>Q4 — Multiple choice (2 pts)</legend>
+          <p>HTTPS is HTTP over which protocol?</p>
+          <label><input type="radio" name="q4" value="IPSec">IPSec</label>
+          <label><input type="radio" name="q4" value="TLS">TLS</label>
+          <label><input type="radio" name="q4" value="SSH">SSH</label>
+          <label><input type="radio" name="q4" value="S/MIME">S/MIME</label>
+          <div id="q4-feedback" class="muted"></div>
+        </fieldset>
+
+        <fieldset>
+          <legend>Q5 — Multi‑select (2 pts)</legend>
+          <p>Select <strong>all</strong> true statements about HTTP/3 and QUIC.</p>
+          <label><input type="checkbox" name="q5" value="udp">QUIC runs over UDP.</label>
+          <label><input type="checkbox" name="q5" value="tcp">QUIC runs over TCP.</label>
+          <label><input type="checkbox" name="q5" value="mobile">HTTP/3 improves reliability on mobile networks.</label>
+          <label><input type="checkbox" name="q5" value="unencrypted">HTTP/3 disables encryption by default.</label>
+          <div id="q5-feedback" class="muted"></div>
+        </fieldset>
+
+        <div class="buttons">
+          <button type="submit">Submit Quiz</button>
+          <button type="reset" id="resetBtn">Reset</button>
+        </div>
+      </form>
+
+      <div id="results" class="result-box" aria-live="polite"></div>
+      <p class="muted" style="margin-top:0.5rem;">Passing is 70% (7/10). Each question = 2 pts.</p>
+    </section>
+  </main>
+
+  <!--Footer for the quiz page-->
+  <footer>
+    <p>This is a class project for IT 3203. Class website:
+      <a href="https://ksuweb.github.io/IT3203/" target="_blank" rel="noopener">https://ksuweb.github.io/IT3203/</a>
+    </p>
+  </footer>
+
+  <script>
+  (function() {{ 
+    const form = document.getElementById('quiz');
+    const results = document.getElementById('results');
+    const resetBtn = document.getElementById('resetBtn');
+
+    function clearFeedback() {{ 
+      results.innerHTML = '';
+      ['q1','q2','q3','q4','q5'].forEach(id => {{ 
+        const el = document.getElementById(id + '-feedback');
+        if (el) el.innerHTML = '';
+      }});
+    }}
+
+    function badge(pass) {{ return '<span class="badge ' + (pass ? 'pass' : 'fail') + '">' + (pass ? 'PASS' : 'FAIL') + '</span>'; }}
+
+    form.addEventListener('submit', function(e) {{
+      e.preventDefault();
+      let score = 0;
+      clearFeedback();
+
+      // Q1
+      const q1 = (form.q1.value || '').trim().toLowerCase();
+      const q1Correct = (q1 === 'application' || q1 === 'application-layer' || q1 === 'application layer');
+      if (q1Correct) score += 2;
+      document.getElementById('q1-feedback').innerHTML = q1Correct
+        ? '<span class="correct">Correct.</span> HTTP is an <span class="answer">application</span>-layer protocol.'
+        : '<span class="incorrect">Incorrect.</span> Correct answer: <span class="answer">application</span>-layer.';
+
+      // Q2
+      const q2 = (form.q2.value || '');
+      const q2Correct = q2 === 'GET';
+      if (q2Correct) score += 2;
+      document.getElementById('q2-feedback').innerHTML = q2Correct
+        ? '<span class="correct">Correct.</span> <code>GET</code> retrieves resources without side effects.'
+        : '<span class="incorrect">Incorrect.</span> Correct answer: <span class="answer">GET</span>.';
+
+      // Q3
+      const q3 = (form.q3.value || '');
+      const q3Correct = q3 === '2';
+      if (q3Correct) score += 2;
+      document.getElementById('q3-feedback').innerHTML = q3Correct
+        ? '<span class="correct">Correct.</span> HTTP/2 introduced multiplexing.'
+        : '<span class="incorrect">Incorrect.</span> Correct answer: <span class="answer">HTTP/2</span>.';
+
+      // Q4
+      const q4 = (form.q4.value || '');
+      const q4Correct = q4 === 'TLS';
+      if (q4Correct) score += 2;
+      document.getElementById('q4-feedback').innerHTML = q4Correct
+        ? '<span class="correct">Correct.</span> HTTPS = HTTP over <span class="answer">TLS</span>.'
+        : '<span class="incorrect">Incorrect.</span> Correct answer: <span class="answer">TLS</span>.';
+
+      // Q5
+      const checked = Array.from(document.querySelectorAll('input[name="q5"]:checked')).map(x => x.value).sort().join(',');
+      const target = ['mobile','udp'].sort().join(',');
+      const q5Correct = checked === target;
+      if (q5Correct) score += 2;
+      document.getElementById('q5-feedback').innerHTML = q5Correct
+        ? '<span class="correct">Correct.</span> QUIC runs over UDP and HTTP/3 improves reliability on mobile networks.'
+        : '<span class="incorrect">Incorrect.</span> Correct answers: <span class="answer">Runs over UPC</span> and <span class="answer">improves reliability</span>.';
+
+      const percent = Math.round((score / 10) * 100);
+      const pass = percent >= 70;
+      results.innerHTML = '<h2>Results ' + badge(pass) + '</h2>' +
+        '<p><strong>Total Score:</strong> ' + score + '/10 (' + percent + '%)</p>' +
+        '<p><em>Scroll up to see feedback for each question.</em></p>';
+    }});
+
+    resetBtn.addEventListener('click', function() {{
+      setTimeout(clearFeedback, 0);
+    }});
+  }})();
+  </script>
+</body>
+</html>
